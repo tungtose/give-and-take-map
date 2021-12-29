@@ -1,11 +1,107 @@
-import React from 'react';
-import { Button, Center, HStack, VStack } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { Button, Center, HStack, Input, InputGroup, InputLeftElement, InputRightElement, VStack } from '@chakra-ui/react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai';
+import { MdCall, MdLocationSearching } from 'react-icons/md';
+import useSearchPost from '../hooks/useSearchPost';
+import { useDebounce } from 'react-use';
 
-function Action() {
+type SearchType = 'phone' | 'address';
+interface FormValues {
+  searchInput: string;
+  searchType: SearchType;
+}
+
+const initialValues: FormValues = { searchInput: "", searchType: 'phone' };
+
+function Action({ setOneLoc }: { setOneLoc: any }) {
+  const [searchType, setSearchType] = useState<SearchType>('phone');
+  const [searchInput, setSearchInput] = useState<string | null>(null);
+  const [input, setInput] = useState<string | null>(null);
+  const searchRes = useSearchPost({ searchInput, searchType });
+  const searchPlaceHolder = searchType === 'address' ? "Address" : "Phone number"
+
+
+  const [, cancel] = useDebounce(
+    () => {
+      setSearchInput(input)
+    },
+    800,
+    [input]
+  )
+
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setInput(event.target.value);
+  }
+
+  useEffect(() => {
+    if (searchRes.isError) setOneLoc(null);
+
+    console.log("==== DEBUG searchRes", searchRes);
+
+    if (searchRes.data) setOneLoc(searchRes.data);
+
+  }, [searchRes.data, searchRes.isError])
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      console.log("======MATCHING")
+      if (input?.length === 0) {
+        setOneLoc(null);
+        return;
+      }
+      searchRes.refetch();
+    }
+  }
+
+
   return (
-    <VStack spacing={4} alignItems="center" pos="absolute" zIndex="1" w="100vw">
-      <Button colorScheme="red"> ABC </Button>
-    </VStack>
+    <VStack spacing={4} padding={2} alignItems="center" pos="absolute" zIndex="1" w="100vw">
+      <HStack>
+        <Button
+          colorScheme={searchType === 'address' ? 'blue' : 'white'}
+          size="sm"
+          borderRadius={14}
+          onClick={() => setSearchType('address')}
+          width={100}
+          leftIcon={<MdLocationSearching />}
+        >
+          Address
+        </Button>
+        <Button
+          colorScheme={searchType === 'phone' ? 'blue' : 'white'}
+          borderRadius={14}
+          width={120}
+          size="sm"
+          onClick={() => setSearchType('phone')}
+          leftIcon={<MdCall />}
+        >
+          Phone
+        </Button>
+      </HStack>
+
+      <InputGroup size="md" w="500px">
+        <InputLeftElement
+          pointerEvents="none"
+          children={<AiOutlineSearch />}
+        />
+        <Input
+          id="searchInput"
+          border={1}
+          placeholder={searchPlaceHolder}
+          background="gray.500"
+          value={input || ''}
+          onChange={onChangeInput}
+          onKeyDown={handleKeyDown}
+        />
+        {input &&
+          <InputRightElement
+            children={<AiOutlineClose onClick={(() => setInput(''))} />}
+          />
+        }
+      </InputGroup>
+    </VStack >
   )
 }
 

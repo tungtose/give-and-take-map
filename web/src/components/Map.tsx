@@ -1,88 +1,131 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import ActionLayout from './ActionLayout';
-import ReactMapGL, { Source, Layer, SourceProps, LayerProps } from '@goongmaps/goong-map-react';
-import { features } from '../.data/loc';
-import { clusterLayer, clusterCountLayer, unclusteredPointLayer } from './layers'
-
-const MAP_API_KEY = 'Yr2zjV2URT3LSo0IXQUMOpwSC7X4yuu7H9NHQbeC'
-
-console.log(features)
-
-const geojson = {
-  type: 'FeatureCollection',
-  features,
-} as any;
-
-const layerStyle = {
-  id: 'point',
-  type: 'circle',
-  paint: {
-    'circle-radius': 10,
-    'circle-color': '#007cbf'
-  }
-} as LayerProps;
-
+import ReactMapGL, {
+  Source,
+  Layer,
+} from '@goongmaps/goong-map-react';
+import { MAP_API_KEY } from '../constants';
+import {
+  getClusterLayerByType,
+  getUnclusterPointLayer,
+  getClusterCountLayerByType
+} from './layers';
+import useLocs from '../hooks/useLocs';
+import { locType } from '../helpers/utils';
+import PostDetail from './Post';
 
 function Map() {
   const [viewport, setViewport] = useState({
-    width: 400,
-    height: 400,
     latitude: 14.0583,
     longitude: 108.2772,
     zoom: 5,
     bearing: 0,
     pitch: 0,
-    transitionDuration: 500
+    transitionDuration: 500,
   });
 
   const mapRef = useRef<any>(null);
+  const [postId, setPostId] = useState<string | null>(null);
+  const { status, data, error, isFetching } = useLocs();
+  const [oneLoc, setOneLoc] = useState<any>(null);
+
+  const locByType = !!oneLoc ? oneLoc : data;
+
+
 
   const onClick = (event: any) => {
     const feature = event.features[0];
     const clusterId = feature.properties.cluster_id;
+    const source = feature.source;
 
-    const mapboxSource = mapRef.current?.getMap().getSource('my-data');
-    console.log(mapboxSource)
-    if (!mapboxSource) return;
+    if (feature.layer.id.startsWith("cluster")) {
+      const mapboxSource = mapRef.current?.getMap().getSource(source);
+      if (!mapboxSource) return;
 
-    mapboxSource.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
-      if (err) {
-        return;
-      }
+      mapboxSource.getClusterExpansionZoom(
+        clusterId,
+        (err: any, zoom: number) => {
+          if (err) {
+            return;
+          }
 
-      setViewport({
-        ...viewport,
-        longitude: feature.geometry.coordinates[0],
-        latitude: feature.geometry.coordinates[1],
-        zoom,
-        transitionDuration: 200
-      });
-    });
+          const [long, lat] = feature.geometry.coordinates;
+          const newZoom = zoom + 2;
+
+          setViewport({
+            ...viewport,
+            longitude: long,
+            latitude: lat,
+            zoom: newZoom,
+            transitionDuration: 400,
+          });
+        }
+      );
+      return;
+    };
+
+    const postId = feature?.properties?.postId;
+    if (postId) {
+      setPostId(postId)
+      console.log("[DEBUG] found postId:", postId);
+    }
   };
 
+
+  const interactiveLayerIds = useMemo(() => {
+    const defaultIds = [...locType.map(type => `cluster-${type}`), ...locType.map(type => `unclustered-point-${type}`)];
+    return !!oneLoc ?
+      [`unclustered-point-${Object.keys(oneLoc)[0]}`] : defaultIds;
+  }, [oneLoc])
+
+  if (isFetching) return <div> Loading.... </div>
   return (
     <div style={{ height: '100vh', width: '100%' }}>
-      <ActionLayout />
+      <ActionLayout setOneLoc={setOneLoc} />
       <ReactMapGL
         {...viewport}
         width="100vw"
         height="100vh"
-        mapStyle="https://tiles.goong.io/assets/goong_map_web.json"
+        mapStyle="https://tiles.goong.io/assets/goong_map_dark.json"
         onViewportChange={setViewport}
         ref={mapRef}
         onClick={onClick}
-        interactiveLayerIds={['clusters']}
-        goongApiAccessToken={MAP_API_KEY}
-      >
-        <Source id="my-data" type="geojson" data={geojson} cluster={true} clusterMaxZoom={14} clusterRadius={50}>
-          <Layer {...clusterLayer} />
-          <Layer {...clusterCountLayer} />
-          <Layer {...unclusteredPointLayer} />
-        </Source>
+        interactiveLayerIds={interactiveLayerIds}
+        goongApiAccessToken={MAP_API_KEY}>
+        {
+          locType.map(type => {
+            if (!locByType[type]) return null;
+            const geoData = {
+              type: "FeatureCollection",
+              features: locByType[type]?.map((d: any) =>
+                ({ type: 'Feature', geometry: d.loc, properties: { postId: d._id } })) as any
+            } as any
 
+            const clusterLayer = getClusterLayerByType(type)
+            const clusterCountLayer = getClusterCountLayerByType(type)
+            const pointLayer = getUnclusterPointLayer(type)
+
+            return (
+              <Source
+                key={type}
+                id={type}
+                type="geojson"
+                data={geoData}
+                cluster={true}
+                clusterMaxZoom={14}
+                clusterRadius={50}
+              >
+                <Layer {...clusterLayer} />
+                <Layer {...clusterCountLayer} />
+                <Layer {...pointLayer} />
+              </Source>
+            )
+          })
+        }
       </ReactMapGL>
+      {postId && <PostDetail postId={postId} />}
     </div>
-  )
+  );
 }
 
 export default Map;
