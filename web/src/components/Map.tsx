@@ -3,6 +3,10 @@ import ActionLayout from './ActionLayout';
 import ReactMapGL, {
   Source,
   Layer,
+  GeolocateControl,
+  FullscreenControl,
+  NavigationControl,
+  ScaleControl,
 } from '@goongmaps/goong-map-react';
 import { MAP_API_KEY } from '../constants';
 import {
@@ -13,6 +17,31 @@ import {
 import useLocs from '../hooks/useLocs';
 import { locType } from '../helpers/utils';
 import PostDetail from './Post';
+import { Box } from '@chakra-ui/react';
+
+const geolocateStyle = {
+  bottom: 20,
+  right: 0,
+  padding: '10px'
+};
+
+const fullscreenControlStyle = {
+  bottom: 56,
+  right: 0,
+  padding: '10px'
+};
+
+const navStyle = {
+  bottom: 56,
+  right: 0,
+  padding: '10px'
+};
+
+const scaleControlStyle = {
+  bottom: 36,
+  left: 0,
+  padding: '10px'
+};
 
 function Map() {
   const [viewport, setViewport] = useState({
@@ -67,7 +96,6 @@ function Map() {
     const postId = feature?.properties?.postId;
     if (postId) {
       setPostId(postId)
-      console.log("[DEBUG] found postId:", postId);
     }
   };
 
@@ -78,10 +106,10 @@ function Map() {
       [`unclustered-point-${Object.keys(oneLoc)[0]}`] : defaultIds;
   }, [oneLoc])
 
-  if (isFetching) return <div> Loading.... </div>
+  if (isFetching) return <Box> Loading.... </Box>
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
-      <ActionLayout setOneLoc={setOneLoc} />
+    <Box style={{ height: '100vh', width: '100%' }}>
+      <ActionLayout setOneLoc={setOneLoc} oneLoc={oneLoc} />
       <ReactMapGL
         {...viewport}
         width="100vw"
@@ -122,9 +150,12 @@ function Map() {
             )
           })
         }
+        <GeolocateControl style={geolocateStyle} />
+        <NavigationControl style={navStyle} />
+        <ScaleControl style={scaleControlStyle} />
       </ReactMapGL>
-      {postId && <PostDetail postId={postId} />}
-    </div>
+      {postId && <PostDetail postId={postId} setPostId={setPostId} />}
+    </Box>
   );
 }
 

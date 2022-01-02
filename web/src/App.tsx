@@ -8,7 +8,13 @@ import {
 import { ReactQueryDevtools } from 'react-query/devtools';
 import GlobalLoadingIndicator from "./components/GlobalLoading";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+});
 
 function App() {
 

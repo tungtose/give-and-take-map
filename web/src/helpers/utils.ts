@@ -5,7 +5,7 @@ export const locType = [
   // 'point_of_sale',
   //  'hospital',
   // 'charity_points',
-  // 'send',
+  'send',
   'receive',
 ];
 

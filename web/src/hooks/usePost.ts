@@ -12,5 +12,5 @@ const getOnePost = async (postId: string): Promise<Post> => {
 };
 
 export default function useLocs(postId: string) {
-  return useQuery<Post | undefined>(["post", postId], () => getOnePost(postId), { staleTime: 15 * 60 * 1000, cacheTime: 15 * 60 * 1000 });
+  return useQuery<Post | undefined>(["post", postId], () => getOnePost(postId), { staleTime: 15 * 60 * 1000, cacheTime: 100 * 60 * 1000 });
 }

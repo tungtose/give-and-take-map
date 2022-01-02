@@ -1,0 +1,75 @@
+const data = [{
+  "_id": "60ec7cf37d688a0046e8187f",
+  "Name": "Cái",
+  "published_at": "2021-07-12T17:33:41.958Z",
+  "createdAt": "2021-07-12T17:33:39.395Z",
+  "updatedAt": "2021-07-12T17:33:41.975Z",
+  "__v": 0,
+  "id": "60ec7cf37d688a0046e8187f"
+}, {
+  "_id": "60ec7cfe7d688a0046e81880",
+  "Name": "Chiếc",
+  "published_at": "2021-07-12T17:33:55.796Z",
+  "createdAt": "2021-07-12T17:33:50.961Z",
+  "updatedAt": "2021-07-12T17:33:55.808Z",
+  "__v": 0,
+  "id": "60ec7cfe7d688a0046e81880"
+}, {
+  "_id": "60ec7d0a7d688a0046e81881",
+  "Name": "Hộp",
+  "published_at": "2021-07-12T17:34:04.113Z",
+  "createdAt": "2021-07-12T17:34:02.743Z",
+  "updatedAt": "2021-07-12T17:34:04.128Z",
+  "__v": 0,
+  "id": "60ec7d0a7d688a0046e81881"
+}, {
+  "_id": "60ef14386ca1a5007e4709fa",
+  "Name": "Đôi",
+  "published_at": "2021-07-14T16:43:40.347Z",
+  "createdAt": "2021-07-14T16:43:36.586Z",
+  "updatedAt": "2021-07-14T16:43:40.377Z",
+  "__v": 0,
+  "id": "60ef14386ca1a5007e4709fa"
+}, {
+  "_id": "60ef14426ca1a5007e4709fb",
+  "Name": "Thùng",
+  "published_at": "2021-07-14T16:43:47.882Z",
+  "createdAt": "2021-07-14T16:43:46.524Z",
+  "updatedAt": "2021-07-14T16:43:47.894Z",
+  "__v": 0,
+  "id": "60ef14426ca1a5007e4709fb"
+}, {
+  "_id": "60ef14846ca1a5007e4709fc",
+  "Name": "Kg",
+  "published_at": "2021-07-14T16:44:54.239Z",
+  "createdAt": "2021-07-14T16:44:52.626Z",
+  "updatedAt": "2021-07-14T16:44:54.248Z",
+  "__v": 0,
+  "id": "60ef14846ca1a5007e4709fc"
+}, {
+  "_id": "60ef16776ca1a5007e4709ff",
+  "Name": "Bộ",
+  "published_at": "2021-07-14T16:53:13.591Z",
+  "createdAt": "2021-07-14T16:53:11.671Z",
+  "updatedAt": "2021-07-14T16:53:13.602Z",
+  "__v": 0,
+  "id": "60ef16776ca1a5007e4709ff"
+}, {
+  "_id": "60ef2e61b0b4de008eeec826",
+  "Name": "VNĐ",
+  "published_at": "2021-07-14T18:37:08.444Z",
+  "createdAt": "2021-07-14T18:35:13.705Z",
+  "updatedAt": "2021-07-14T18:37:08.460Z",
+  "__v": 0,
+  "id": "60ef2e61b0b4de008eeec826"
+}, {
+  "_id": "6100e572505db07ae495ba7e",
+  "Name": "Quả",
+  "published_at": "2021-07-28T05:05:45.819Z",
+  "createdAt": "2021-07-28T05:04:50.779Z",
+  "updatedAt": "2021-07-28T05:05:45.829Z",
+  "__v": 0,
+  "id": "6100e572505db07ae495ba7e"
+}]
+
+export const getUnitById = (id: string) => data.find(element => element._id === id)?.Name || 'unknown';
