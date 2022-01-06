@@ -18,13 +18,13 @@ cd thesis
 
 cat > deploy.sh << EOF
 #!/bin/sh
-aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 920161623610.dkr.ecr.ap-southeast-1.amazonaws.com
+aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 635506958747.dkr.ecr.ap-southeast-1.amazonaws.com
 VERSION=\$1
 rm -rf .env
 echo "VERSION=\$VERSION" > .env
 sudo docker-compose up -d
 curl -X POST -H 'Content-type: application/json' \
-  --data  "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"plain_text\",\"emoji\":true,\"text\":\"🚀 Deploy SERVER Staging SUCCESS 🚀\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrdwn\",\"text\":\"Review website\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View Page\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"https://staging.thesis.com\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"}]}" \
+  --data  "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"plain_text\",\"emoji\":true,\"text\":\"🚀 Deploy SERVER SUCCESS 🚀\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrdwn\",\"text\":\"Review website\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View Page\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"https://staging.thesis.com\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"}]}" \
   https://hooks.slack.com/services/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
 EOF
 
@@ -39,25 +39,36 @@ cat > hook.yaml << EOF
       name: "version"
 EOF
 
-
 cat > docker-compose.yml << EOF
 version: "3"
 services:
   api:
-    image: 920161623610.dkr.ecr.ap-southeast-1.amazonaws.com/graphql-api-staging:\${VERSION}
-    container_name: graphql-api
+    image: 635506958747.dkr.ecr.ap-southeast-1.amazonaws.com/map-api:\${VERSION}
+    container_name: api
     ports:
-      - "80:5000"
+      - "5000:5000"
     environment:
-      - MONGO_URL=mongodb+srv://thesis:PZHNNmOravk4kf3U@datasean-staging.xr84e.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+      - MONGO_URL=mongodb//mongo:27017/thesis
       - JWT_SECRET=thesis-secret
       - AWS_DEFAULT_REGION=ap-southeast-1
-      - S3_ACCESS_KEY_ID=AKIA5MPPIDY5BK46QIOK
-      - S3_SECRET_ACCESS_KEY=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
-      - S3_IMAGE_STORAGE_NAME=storage.thesis.com
-      - NODE_ENV=staging
+      - S3_ACCESS_KEY_ID=AKIAZH5ZKUGNYQZR4EWN
+      - S3_SECRET_ACCESS_KEY=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
+      - S3_IMAGE_STORAGE_NAME=storage.tungto.dev
+      - NODE_ENV=production
     restart: always
     privileged: true
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 0.0.0.0:27107:27017
+    volumes:
+      - .docker/data/db:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=thesis
+    networks:
+      - db
 EOF
 
 chmod +x deploy.sh

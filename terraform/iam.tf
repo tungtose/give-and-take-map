@@ -40,7 +40,7 @@ resource "aws_iam_role" "ec2_role" {
   name               = "${local.env}_role"
   assume_role_policy = <<EOF
 {
-  "Version": "2012_10_17",
+  "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
@@ -57,7 +57,7 @@ EOF
 resource "aws_iam_policy" "ecr_policy" {
   name = "${local.env}_ecr_access_policy"
   policy = jsonencode({
-    Version = "2012_10_17"
+    Version = "2012-10-17"
     Statement = [
       {
         Action = [

@@ -24,11 +24,31 @@ resource "aws_route53_record" "storage_image" {
   }
 }
 
+resource "aws_route53_record" "map_server" {
+  zone_id = aws_route53_zone.totungdev.zone_id
+  name    = var.thesis_server_domain_name
+  type    = "A"
+  alias {
+    name                   = aws_cloudfront_distribution.map_server.domain_name
+    zone_id                = aws_cloudfront_distribution.map_server.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
 resource "aws_route53_record" "validation_map_web" {
   allow_overwrite = true
   name            = tolist(aws_acm_certificate.map_web.domain_validation_options)[0].resource_record_name
   records         = [tolist(aws_acm_certificate.map_web.domain_validation_options)[0].resource_record_value]
   type            = tolist(aws_acm_certificate.map_web.domain_validation_options)[0].resource_record_type
+  zone_id         = aws_route53_zone.totungdev.id
+  ttl             = 60
+}
+
+resource "aws_route53_record" "validation_map_server" {
+  allow_overwrite = true
+  name            = tolist(aws_acm_certificate.map_server.domain_validation_options)[0].resource_record_name
+  records         = [tolist(aws_acm_certificate.map_server.domain_validation_options)[0].resource_record_value]
+  type            = tolist(aws_acm_certificate.map_server.domain_validation_options)[0].resource_record_type
   zone_id         = aws_route53_zone.totungdev.id
   ttl             = 60
 }

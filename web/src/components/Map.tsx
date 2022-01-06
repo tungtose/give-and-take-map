@@ -4,7 +4,6 @@ import ReactMapGL, {
   Source,
   Layer,
   GeolocateControl,
-  FullscreenControl,
   NavigationControl,
   ScaleControl,
 } from '@goongmaps/goong-map-react';
@@ -20,16 +19,11 @@ import PostDetail from './Post';
 import { Box } from '@chakra-ui/react';
 
 const geolocateStyle = {
-  bottom: 20,
+  bottom: 150,
   right: 0,
   padding: '10px'
 };
 
-const fullscreenControlStyle = {
-  bottom: 56,
-  right: 0,
-  padding: '10px'
-};
 
 const navStyle = {
   bottom: 56,
@@ -108,7 +102,7 @@ function Map() {
 
   if (isFetching) return <Box> Loading.... </Box>
   return (
-    <Box style={{ height: '100vh', width: '100%' }}>
+    <Box w="full" h="100%">
       <ActionLayout setOneLoc={setOneLoc} oneLoc={oneLoc} />
       <ReactMapGL
         {...viewport}

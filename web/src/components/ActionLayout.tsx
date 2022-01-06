@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Center, HStack, Input, InputGroup, InputLeftElement, InputRightElement, VStack } from '@chakra-ui/react';
+import { Button, HStack, Input, InputGroup, InputLeftElement, InputRightElement, VStack } from '@chakra-ui/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { AiOutlineSearch, AiOutlineClose, AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 import { MdCall, MdLocationSearching, MdPlusOne } from 'react-icons/md';
@@ -51,8 +51,6 @@ function Action({ setOneLoc, oneLoc }: { setOneLoc: any, oneLoc: any }) {
     }
   }
 
-  console.log("[ActionLAyout]: RERENDER");
-
   return (
     <>
       <VStack spacing={4} padding={2} alignItems="center" pos="absolute" zIndex="1" w="100vw">
@@ -79,7 +77,7 @@ function Action({ setOneLoc, oneLoc }: { setOneLoc: any, oneLoc: any }) {
           </Button>
         </HStack>
 
-        <InputGroup size="md" w="100px">
+        <InputGroup size="md" w={["80%", "500px", "700px"]}>
           <InputLeftElement
             pointerEvents="none"
             children={<AiOutlineSearch />}
@@ -101,7 +99,7 @@ function Action({ setOneLoc, oneLoc }: { setOneLoc: any, oneLoc: any }) {
         </InputGroup>
       </VStack >
 
-      <HStack spacing={4} padding={4} justifyContent="center" pos="absolute" bottom={0} zIndex="1" w="full">
+      <HStack spacing={[2, 4]} padding={[2, 4]} justifyContent="center" pos="absolute" bottom={[20, 0]} zIndex="1" w="full">
         <GiveModal />
         <ReceiveModal />
       </HStack>

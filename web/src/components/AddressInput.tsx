@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Select,
   AsyncSelect,
-  CreatableSelect,
-  AsyncCreatableSelect,
 } from "chakra-react-select";
-import { useAutoCompleteAddress, getAutoComplete, getAddressDetail } from '../hooks/useAutoCompleteAddress';
+import { getAutoComplete, getAddressDetail } from '../hooks/useAutoCompleteAddress';
 import debounce from 'debounce-promise';
 
 

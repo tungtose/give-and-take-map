@@ -17,7 +17,7 @@ resource "aws_s3_bucket_policy" "storage_image" {
 
 resource "aws_s3_bucket" "storage_image" {
   bucket        = var.storage_domain_name
-  acl           = "private"
+  acl           = "public-read"
   force_destroy = true
   cors_rule {
     allowed_headers = ["*"]
@@ -49,7 +49,7 @@ resource "aws_s3_bucket_policy" "map_web" {
 
 resource "aws_s3_bucket" "map_web" {
   bucket        = var.thesis_domain_name
-  acl           = "private"
+  acl           = "public-read"
   force_destroy = false
   cors_rule {
     allowed_headers = ["*"]

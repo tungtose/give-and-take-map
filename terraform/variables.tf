@@ -26,6 +26,12 @@ variable "thesis_domain_name" {
   description = "thesis domain"
 }
 
+variable "thesis_server_domain_name" {
+  type        = string
+  default     = "api.thesis.tungto.dev"
+  description = "thesis domain"
+}
+
 variable "storage_domain_name" {
   type        = string
   default     = "storage.tungto.dev"
