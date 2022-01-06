@@ -23,9 +23,6 @@ VERSION=\$1
 rm -rf .env
 echo "VERSION=\$VERSION" > .env
 sudo docker-compose up -d
-curl -X POST -H 'Content-type: application/json' \
-  --data  "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"plain_text\",\"emoji\":true,\"text\":\"🚀 Deploy SERVER SUCCESS 🚀\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrdwn\",\"text\":\"Review website\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View Page\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"https://staging.thesis.com\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"}]}" \
-  https://hooks.slack.com/services/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
 EOF
 
 # Add authentication method into hook
@@ -48,7 +45,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - MONGO_URL=mongodb//mongo:27017/thesis
+      - MONGO_URL=mongodb://mongo:27017/thesis
       - JWT_SECRET=thesis-secret
       - AWS_DEFAULT_REGION=ap-southeast-1
       - S3_ACCESS_KEY_ID=AKIAZH5ZKUGNYQZR4EWN
@@ -67,8 +64,6 @@ services:
       - .docker/data/db:/data/db
     environment:
       - MONGO_INITDB_DATABASE=thesis
-    networks:
-      - db
 EOF
 
 chmod +x deploy.sh
