@@ -17,7 +17,6 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-
   return (
     <ChakraProvider theme={theme} resetCSS >
       <QueryClientProvider client={queryClient}>

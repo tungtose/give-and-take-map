@@ -17,6 +17,7 @@ import useLocs from '../hooks/useLocs';
 import { locType } from '../helpers/utils';
 import PostDetail from './Post';
 import { Box } from '@chakra-ui/react';
+import OverlayLoading from './OverlayLoading';
 
 const geolocateStyle = {
   bottom: 150,
@@ -49,7 +50,7 @@ function Map() {
 
   const mapRef = useRef<any>(null);
   const [postId, setPostId] = useState<string | null>(null);
-  const { status, data, error, isFetching } = useLocs();
+  const { data, isFetching } = useLocs();
   const [oneLoc, setOneLoc] = useState<any>(null);
 
   const locByType = !!oneLoc ? oneLoc : data;
@@ -100,60 +101,61 @@ function Map() {
       [`unclustered-point-${Object.keys(oneLoc)[0]}`] : defaultIds;
   }, [oneLoc])
 
-  if (isFetching) return <Box> Loading.... </Box>
   return (
-    <Box w="full" h="100%">
-      <ActionLayout
-        setViewport={setViewport}
-        setOneLoc={setOneLoc}
-        oneLoc={oneLoc}
-      />
-      <ReactMapGL
-        {...viewport}
-        width="100vw"
-        height="100vh"
-        mapStyle="https://tiles.goong.io/assets/goong_map_dark.json"
-        onViewportChange={setViewport}
-        ref={mapRef}
-        onClick={onClick}
-        interactiveLayerIds={interactiveLayerIds}
-        goongApiAccessToken={MAP_API_KEY}>
-        {
-          locType.map(type => {
-            if (!locByType[type]) return null;
-            const geoData = {
-              type: "FeatureCollection",
-              features: locByType[type]?.map((d: any) =>
-                ({ type: 'Feature', geometry: d.loc, properties: { postId: d._id } })) as any
-            } as any
+    <OverlayLoading active={isFetching}>
+      <Box w="full" h="100%">
+        <ActionLayout
+          setViewport={setViewport}
+          setOneLoc={setOneLoc}
+          oneLoc={oneLoc}
+        />
+        <ReactMapGL
+          {...viewport}
+          width="100vw"
+          height="100vh"
+          mapStyle="https://tiles.goong.io/assets/goong_map_dark.json"
+          onViewportChange={setViewport}
+          ref={mapRef}
+          onClick={onClick}
+          interactiveLayerIds={interactiveLayerIds}
+          goongApiAccessToken={MAP_API_KEY}>
+          {
+            !isFetching && locType.map(type => {
+              if (!locByType[type]) return null;
+              const geoData = {
+                type: "FeatureCollection",
+                features: locByType[type]?.map((d: any) =>
+                  ({ type: 'Feature', geometry: d.loc, properties: { postId: d._id } })) as any
+              } as any
 
-            const clusterLayer = getClusterLayerByType(type)
-            const clusterCountLayer = getClusterCountLayerByType(type)
-            const pointLayer = getUnclusterPointLayer(type)
+              const clusterLayer = getClusterLayerByType(type)
+              const clusterCountLayer = getClusterCountLayerByType(type)
+              const pointLayer = getUnclusterPointLayer(type)
 
-            return (
-              <Source
-                key={type}
-                id={type}
-                type="geojson"
-                data={geoData}
-                cluster={true}
-                clusterMaxZoom={14}
-                clusterRadius={50}
-              >
-                <Layer {...clusterLayer} />
-                <Layer {...clusterCountLayer} />
-                <Layer {...pointLayer} />
-              </Source>
-            )
-          })
-        }
-        <GeolocateControl style={geolocateStyle} />
-        <NavigationControl style={navStyle} />
-        <ScaleControl style={scaleControlStyle} />
-      </ReactMapGL>
-      {postId && <PostDetail postId={postId} setPostId={setPostId} />}
-    </Box>
+              return (
+                <Source
+                  key={type}
+                  id={type}
+                  type="geojson"
+                  data={geoData}
+                  cluster={true}
+                  clusterMaxZoom={14}
+                  clusterRadius={50}
+                >
+                  <Layer {...clusterLayer} />
+                  <Layer {...clusterCountLayer} />
+                  <Layer {...pointLayer} />
+                </Source>
+              )
+            })
+          }
+          <GeolocateControl style={geolocateStyle} />
+          <NavigationControl style={navStyle} />
+          <ScaleControl style={scaleControlStyle} />
+        </ReactMapGL>
+        {postId && <PostDetail postId={postId} setPostId={setPostId} />}
+      </Box>
+    </OverlayLoading>
   );
 }
 
