@@ -103,7 +103,11 @@ function Map() {
   if (isFetching) return <Box> Loading.... </Box>
   return (
     <Box w="full" h="100%">
-      <ActionLayout setOneLoc={setOneLoc} oneLoc={oneLoc} />
+      <ActionLayout
+        setViewport={setViewport}
+        setOneLoc={setOneLoc}
+        oneLoc={oneLoc}
+      />
       <ReactMapGL
         {...viewport}
         width="100vw"

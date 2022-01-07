@@ -1362,10 +1362,10 @@ cardinal@~0.4.2:
     ansicolors "~0.2.1"
     redeyed "~0.4.0"
 
-chakra-react-select@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/chakra-react-select/-/chakra-react-select-1.4.0.tgz#01bbbd701638ea0edb14a914186bb12db8579382"
-  integrity sha512-hfE0KdTOlKWQABaRRpUDKCG1OBj8TJ/qzwa/Txoq0rFiwfVoMtFIO9kDLchzx1LZTXS+B8xd7nIRF866X1yxYQ==
+chakra-react-select@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/chakra-react-select/-/chakra-react-select-2.0.1.tgz#9774de6875a4974bafad78124c00d948d43cf3da"
+  integrity sha512-JIop+Qr7DVaVWNfRVI9KvaD3Fz/ldRi9PTlkx6G9CpNJxL7R1WtKU/qiV7EP6LPRMq9iICLvb9dQE+ZiZqj0SQ==
   dependencies:
     "@types/react-select" "^4.0.18"
     react-select "^4.3.1"

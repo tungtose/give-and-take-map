@@ -13,7 +13,7 @@
     "@goongmaps/goong-map-react": "^1.1.0",
     "@types/ramda": "^0.27.53",
     "axios": "^0.24.0",
-    "chakra-react-select": "^1.4.0",
+    "chakra-react-select": "^2.0.1",
     "chakra-ui-autocomplete": "^1.4.5",
     "date-fns": "^2.28.0",
     "debounce-promise": "^3.1.2",

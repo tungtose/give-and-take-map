@@ -15,8 +15,9 @@ const searchPost = async (query: SearchPostQuery): Promise<Post> => {
 
   if (response.data.statusCode === 404) throw new Error("xxxxxxxx")
 
-  const locByType = groupByLocType([response.data]);
-  return locByType;
+  const [lng, lat] = response.data.loc.coordinates;
+  return { lat, lng }
+
 };
 
 export default function useSearchPost(query: SearchPostQuery) {
