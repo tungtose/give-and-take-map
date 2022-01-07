@@ -45,7 +45,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - MONGO_URL=mongodb://mongo:27017/thesis
+      - MONGO_URL=mongodb+srv://tung:1WfSY2UeAXwUJkWP@map.8lqu6.mongodb.net/thesis
       - JWT_SECRET=thesis-secret
       - AWS_DEFAULT_REGION=ap-southeast-1
       - S3_ACCESS_KEY_ID=AKIAZH5ZKUGNYQZR4EWN
@@ -54,16 +54,6 @@ services:
       - NODE_ENV=production
     restart: always
     privileged: true
-
-  mongo:
-    image: mongo
-    restart: always
-    ports:
-      - 0.0.0.0:27107:27017
-    volumes:
-      - .docker/data/db:/data/db
-    environment:
-      - MONGO_INITDB_DATABASE=thesis
 EOF
 
 chmod +x deploy.sh
