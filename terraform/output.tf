@@ -15,3 +15,11 @@ output "api_ecr_repository" {
   value = aws_ecr_repository.map_api.repository_url
 }
 
+
+resource "aws_instance" "web" {
+  # ...
+  provisioner "local-exec" {
+    when    = destroy
+    command = "echo 'Destroy-time provisioner'"
+  }
+}

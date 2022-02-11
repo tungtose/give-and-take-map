@@ -15,6 +15,7 @@ resource "aws_s3_bucket_policy" "storage_image" {
   policy = data.aws_iam_policy_document.storage_image.json
 }
 
+
 resource "aws_s3_bucket" "storage_image" {
   bucket        = var.storage_domain_name
   acl           = "public-read"
@@ -54,7 +55,7 @@ resource "aws_s3_bucket" "map_web" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["PUT", "POST"]
-    allowed_origins = ["http://localhost:5000", "http://localhost:8088", "https://thesis.tungto.dev"]
+    allowed_origins = ["http://localhost:8088", "https://thesis.tungto.dev"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
   }
