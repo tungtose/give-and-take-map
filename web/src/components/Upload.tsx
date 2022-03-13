@@ -49,7 +49,7 @@ const uploadHandler = async (url: string, file: any) => {
 };
 
 // TODO: FIX ME!!!
-const STORAGE_HOST = 'https://storage.datasean.com';
+const STORAGE_HOST = 'https://storage.tungto.dev';
 
 const Upload = (props: any) => {
   const { setFieldValue } = props;

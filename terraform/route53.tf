@@ -18,8 +18,8 @@ resource "aws_route53_record" "storage_image" {
   name    = var.storage_domain_name
   type    = "A"
   alias {
-    name                   = aws_cloudfront_distribution.map_web.domain_name
-    zone_id                = aws_cloudfront_distribution.map_web.hosted_zone_id
+    name                   = aws_cloudfront_distribution.image_storage.domain_name
+    zone_id                = aws_cloudfront_distribution.image_storage.hosted_zone_id
     evaluate_target_health = false
   }
 }

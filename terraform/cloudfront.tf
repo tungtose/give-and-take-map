@@ -85,7 +85,7 @@ resource "aws_cloudfront_distribution" "image_storage" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    cloudfront_default_certificate = false
     acm_certificate_arn            = aws_acm_certificate.storage_image.arn
     ssl_support_method             = "sni-only"
   }
@@ -172,7 +172,7 @@ resource "aws_cloudfront_distribution" "map_web" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    cloudfront_default_certificate = false
     acm_certificate_arn            = aws_acm_certificate.map_web.arn
     ssl_support_method             = "sni-only"
   }
@@ -232,7 +232,7 @@ resource "aws_cloudfront_distribution" "map_server" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    cloudfront_default_certificate = false
     acm_certificate_arn            = aws_acm_certificate.map_server.arn
     ssl_support_method             = "sni-only"
   }
