@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  # api:
+  #   build: ./api
+  #   depends_on:
+  #     - mongo
+  #     - redis
+  #   volumes:
+  #     - ./api:/app
+  #   command: yarn dev && yarn gentype --watch
+  #   env_file:
+  #     - ./api/.env
+  #   ports:
+  #     - "5000:5000"
+  #   networks:
+  #     - db
+  #     - cache
+
+  mongo_thesis:
+    container_name: mongo_thesis
+    image: mongo
+    restart: always
+    ports:
+      - 0.0.0.0:1234:27017
+    volumes:
+      - .docker/data/db:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=thesis
+    networks:
+      - thesis-db
+
+  # redis:
+  #   image: redis:6.2.5-alpine
+  #   container_name: citron-redis
+  #   command: redis-server --requirepass lynx2213R
+  #   volumes:
+  #     - .docker/data/redis:/data
+  #   restart: always
+  #   ports:
+  #     - 0.0.0.0:6379:6379
+  #   networks:
+  #     - cache
+
+networks:
+  thesis-db:
+    driver: bridge
+
+volumes:
+  thesis-db:
